@@ -1,0 +1,22 @@
+# Iron City IT - ThreatIngestor Configuration
+general:
+  sleep: 900
+  state_path: /tmp/threatingestor.state
+
+sources:
+  - name: abuse-ch-urlhaus
+    module: rss
+    url: https://urlhaus.abuse.ch/feeds/payloads/
+    
+  - name: malware-traffic-analysis
+    module: rss
+    url: https://www.malware-traffic-analysis.net/blog-entries.rss
+
+  - name: sans-isc
+    module: rss
+    url: https://isc.sans.edu/rssfeed.xml
+
+operators:
+  - name: json-output
+    module: json
+    filename: data/iocs/threatingestor-output.json

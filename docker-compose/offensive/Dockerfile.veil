@@ -1,0 +1,25 @@
+# Veil Dockerfile - Iron City IT
+# ⚠️  REQUIRES CLIENT AUTHORIZATION BEFORE USE ⚠️
+
+FROM kalilinux/kali-rolling
+
+RUN apt-get update && apt-get install -y \
+    git \
+    python3 \
+    python3-pip \
+    python3-crypto \
+    mingw-w64 \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /opt
+
+RUN git clone https://github.com/Veil-Framework/Veil.git
+
+WORKDIR /opt/Veil
+
+RUN ./config/setup.sh --force --silent
+
+# Create output directory
+RUN mkdir -p /var/lib/veil/output
+
+ENTRYPOINT ["/opt/Veil/Veil.py"]

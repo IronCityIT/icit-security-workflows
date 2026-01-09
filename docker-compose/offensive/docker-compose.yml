@@ -1,0 +1,47 @@
+# OFFENSIVE TOOLS - Empire & Veil
+# ⚠️  REQUIRES SIGNED CLIENT AUTHORIZATION BEFORE USE ⚠️
+#
+# Deploy: docker-compose up -d
+# Access Empire Starkiller: https://localhost:1337
+#
+# WARNING: All activity is logged. Never use without authorization.
+
+version: '3.8'
+
+services:
+  empire:
+    image: bcsecurity/empire:latest
+    container_name: empire
+    ports:
+      - "1337:1337"   # Starkiller GUI
+      - "5000:5000"   # REST API
+      - "443:443"     # HTTPS listener
+      - "80:80"       # HTTP listener
+    volumes:
+      - empire_data:/opt/Empire/empire/server/data
+      - ./logs:/opt/Empire/empire/server/logs
+    environment:
+      EMPIRE_HEADLESS: "true"
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "5"
+
+  # Veil for payload generation
+  veil:
+    build:
+      context: .
+      dockerfile: Dockerfile.veil
+    container_name: veil
+    volumes:
+      - veil_output:/var/lib/veil/output
+      - ./logs:/var/log/veil
+    stdin_open: true
+    tty: true
+    restart: "no"  # Don't auto-restart - interactive use only
+
+volumes:
+  empire_data:
+  veil_output:

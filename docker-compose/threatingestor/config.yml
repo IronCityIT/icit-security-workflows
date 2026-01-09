@@ -1,0 +1,172 @@
+# ThreatIngestor Configuration - Iron City IT
+# Automatically collects IOCs from security feeds
+
+general:
+  daemon: true
+  sleep: 900  # 15 minutes between runs
+
+# ============================================================
+# SOURCES - Where we collect threat intel from
+# ============================================================
+
+sources:
+  # ---------------------------------------------------------
+  # RSS Feeds - Security Blogs (FREE, no API key needed)
+  # ---------------------------------------------------------
+  
+  - name: threatpost
+    module: rss
+    url: https://threatpost.com/feed/
+    
+  - name: bleeping-computer
+    module: rss
+    url: https://www.bleepingcomputer.com/feed/
+    
+  - name: krebs-on-security
+    module: rss
+    url: https://krebsonsecurity.com/feed/
+    
+  - name: malwarebytes-blog
+    module: rss
+    url: https://blog.malwarebytes.com/feed/
+    
+  - name: talos-intelligence
+    module: rss
+    url: https://blog.talosintelligence.com/feeds/posts/default
+    
+  - name: securelist-kaspersky
+    module: rss
+    url: https://securelist.com/feed/
+    
+  - name: welivesecurity-eset
+    module: rss
+    url: https://www.welivesecurity.com/feed/
+    
+  - name: unit42-paloalto
+    module: rss
+    url: https://unit42.paloaltonetworks.com/feed/
+    
+  - name: microsoft-security
+    module: rss
+    url: https://www.microsoft.com/security/blog/feed/
+    
+  - name: google-threat-analysis
+    module: rss
+    url: https://blog.google/threat-analysis-group/rss/
+    
+  - name: sentinelone-labs
+    module: rss
+    url: https://www.sentinelone.com/labs/feed/
+    
+  - name: crowdstrike-blog
+    module: rss
+    url: https://www.crowdstrike.com/blog/feed/
+    
+  - name: mandiant-blog
+    module: rss
+    url: https://www.mandiant.com/resources/blog/rss.xml
+    
+  - name: recorded-future
+    module: rss
+    url: https://www.recordedfuture.com/feed
+    
+  - name: the-hacker-news
+    module: rss
+    url: https://feeds.feedburner.com/TheHackersNews
+    
+  - name: dark-reading
+    module: rss
+    url: https://www.darkreading.com/rss.xml
+    
+  - name: security-week
+    module: rss
+    url: https://www.securityweek.com/feed
+
+  # ---------------------------------------------------------
+  # AlienVault OTX (FREE with API key)
+  # Sign up: https://otx.alienvault.com/
+  # ---------------------------------------------------------
+  
+  # Uncomment when you have OTX API key
+  # - name: otx-subscribed
+  #   module: rss
+  #   url: https://otx.alienvault.com/api/v1/pulses/subscribed
+  #   headers:
+  #     X-OTX-API-KEY: ${OTX_API_KEY}
+
+  # ---------------------------------------------------------
+  # Twitter (Requires Twitter Developer Account)
+  # Apply: https://developer.twitter.com/
+  # ---------------------------------------------------------
+  
+  # Uncomment when you have Twitter API access
+  # - name: twitter-c2-list
+  #   module: twitter
+  #   credentials: twitter_creds
+  #   list_id: 1234567890  # InQuest IOC feed list
+
+# ============================================================
+# OPERATORS - Where we send the collected IOCs
+# ============================================================
+
+operators:
+  # ---------------------------------------------------------
+  # CSV Output - Always enabled, local backup
+  # ---------------------------------------------------------
+  
+  - name: csv-iocs
+    module: csv
+    filename: /app/output/iocs-{date}.csv
+    
+  - name: csv-urls
+    module: csv
+    filename: /app/output/urls-{date}.csv
+    artifact_types:
+      - URL
+      
+  - name: csv-domains
+    module: csv
+    filename: /app/output/domains-{date}.csv
+    artifact_types:
+      - Domain
+      
+  - name: csv-ips
+    module: csv
+    filename: /app/output/ips-{date}.csv
+    artifact_types:
+      - IPAddress
+
+  # ---------------------------------------------------------
+  # MISP Output (Enable when MISP is deployed)
+  # ---------------------------------------------------------
+  
+  # Uncomment when MISP is running
+  # - name: misp-output
+  #   module: misp
+  #   url: ${MISP_URL}
+  #   key: ${MISP_API_KEY}
+  #   ssl: false
+
+  # ---------------------------------------------------------
+  # Wazuh/Sentinel Integration via SQS or file
+  # ---------------------------------------------------------
+  
+  # For direct Wazuh CDB list integration
+  # Process the CSV files and convert to Wazuh format
+  # using scripts/iocs_to_wazuh.py
+
+# ============================================================
+# FILTERS - What we ignore
+# ============================================================
+
+# Uncomment to add whitelists
+# filters:
+#   - name: whitelist-domains
+#     module: whitelist
+#     artifact_types:
+#       - Domain
+#     whitelist:
+#       - google.com
+#       - microsoft.com
+#       - amazon.com
+#       - cloudflare.com

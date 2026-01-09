@@ -1,0 +1,22 @@
+{
+  "feeds": [
+    {
+      "name": "CIRCL OSINT Feed",
+      "url": "https://www.circl.lu/doc/misp/feed-osint/",
+      "enabled": true,
+      "source_format": "misp"
+    },
+    {
+      "name": "Botvrij.eu",
+      "url": "https://www.botvrij.eu/data/feed-osint/",
+      "enabled": true,
+      "source_format": "misp"
+    }
+  ],
+  "settings": {
+    "auto_publish": false,
+    "distribution": 0,
+    "threat_level": 2,
+    "analysis": 2
+  }
+}

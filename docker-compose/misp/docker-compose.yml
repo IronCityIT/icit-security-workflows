@@ -1,0 +1,64 @@
+# MISP Docker Compose - Iron City IT
+# Deploy: docker-compose up -d
+# Access: https://misp.ironcityit.com
+# Default creds: admin@admin.test / admin (CHANGE IMMEDIATELY)
+
+version: '3.8'
+
+services:
+  misp:
+    image: coolacid/misp-docker:core-latest
+    depends_on:
+      - redis
+      - db
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - misp_data:/var/www/MISP/app/files
+      - misp_config:/var/www/MISP/app/Config
+      - misp_logs:/var/www/MISP/app/tmp/logs
+    environment:
+      MYSQL_HOST: db
+      MYSQL_DATABASE: misp
+      MYSQL_USER: misp
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-misp_password_change_me}
+      MISP_ADMIN_EMAIL: admin@ironcityit.com
+      MISP_ADMIN_PASSPHRASE: ${MISP_ADMIN_PASSPHRASE:-admin_password_change_me}
+      MISP_BASEURL: https://misp.ironcityit.com
+      REDIS_FQDN: redis
+      HOSTNAME: misp.ironcityit.com
+      # Disable self-signed cert warnings in production
+      NOREDIR: "true"
+    restart: unless-stopped
+
+  misp-modules:
+    image: coolacid/misp-docker:modules-latest
+    environment:
+      REDIS_BACKEND: redis
+    depends_on:
+      - redis
+      - db
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: misp
+      MYSQL_USER: misp
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-misp_password_change_me}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_password_change_me}
+    volumes:
+      - misp_mysql:/var/lib/mysql
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+
+volumes:
+  misp_data:
+  misp_config:
+  misp_logs:
+  misp_mysql:

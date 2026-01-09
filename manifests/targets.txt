@@ -1,0 +1,11 @@
+# Iron City IT - Security Scan Targets
+# Add client targets here (URLs or IPs)
+# Lines starting with # are ignored
+
+# Example targets (replace with authorized client targets)
+# https://client-website.com
+# 192.168.1.0/24
+
+# Test targets (intentionally vulnerable - safe to scan)
+http://testfire.net
+https://demo.testfire.net

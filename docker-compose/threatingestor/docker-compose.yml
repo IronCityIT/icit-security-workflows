@@ -1,0 +1,25 @@
+# ThreatIngestor Docker Compose - Iron City IT
+# Deploy: docker-compose up -d
+# Logs: docker-compose logs -f
+
+version: '3.8'
+
+services:
+  threatingestor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: threatingestor
+    volumes:
+      - ./config.yml:/app/config.yml:ro
+      - ./output:/app/output
+    environment:
+      # Add API keys as needed
+      TWITTER_BEARER_TOKEN: ${TWITTER_BEARER_TOKEN:-}
+      MISP_URL: ${MISP_URL:-https://misp.ironcityit.com}
+      MISP_API_KEY: ${MISP_API_KEY:-}
+      OTX_API_KEY: ${OTX_API_KEY:-}
+    restart: unless-stopped
+
+volumes:
+  output:

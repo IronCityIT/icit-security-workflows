@@ -1,0 +1,12 @@
+# Iron City IT - DNS Guard Target Domains
+# Add client domains here for DNS security auditing
+# Lines starting with # are ignored
+
+# Example domains (replace with actual client domains)
+# example.com
+# api.example.com
+# mail.example.com
+
+# Test domains (safe to scan)
+testfire.net
+demo.testfire.net
